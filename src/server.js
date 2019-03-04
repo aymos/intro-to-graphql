@@ -9,26 +9,26 @@ import user from './types/user/user.resolvers'
 
 const types = ['product', 'coupon', 'user']
 
-export const start = async () => {
-  const rootSchema = `
+export const start = async() => {
+    const rootSchema = `
     schema {
       query: Query
       mutation: Mutation
     }
   `
-  const schemaTypes = await Promise.all(types.map(loadTypeSchema))
+    const schemaTypes = await Promise.all(types.map(loadTypeSchema))
 
-  const server = new ApolloServer({
-    typeDefs: [rootSchema, ...schemaTypes],
-    resolvers: merge({}, product, coupon, user),
-    context({ req }) {
-      // use the authenticate function from utils to auth req, its Async!
-      return { user: null }
-    }
-  })
+    const server = new ApolloServer({
+        typeDefs: [rootSchema, ...schemaTypes],
+        resolvers: merge({}, product, coupon, user),
+        context({ req }) {
+            // use the authenticate function from utils to auth req, its Async!
+            return { user: null }
+        }
+    })
 
-  await connect(config.dbUrl)
-  const { url } = await server.listen({ port: config.port })
+    await connect(config.dbUrl)
+    const { url } = await server.listen({ port: config.port })
 
-  console.log(`GQL server ready at ${url}`)
+    console.log(`GQL server ready at ${url}`)
 }
